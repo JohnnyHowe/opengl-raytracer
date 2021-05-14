@@ -1,3 +1,7 @@
+OpenGLProject/OpenGL/*
+*.vs*
+Debug
+
 # Prerequisites
 *.d
 
