@@ -26,6 +26,7 @@
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="TextureBMP.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Plane.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="TextureBMP.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
