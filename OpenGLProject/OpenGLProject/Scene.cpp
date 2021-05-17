@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "Scene.h"
 #include "Ray.h"
 
@@ -14,14 +15,28 @@ glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 
 	color = obj->lighting(lightPos, -ray.dir, ray.hit);						//Object's colour
 
+	// ground plane tiling
+	if (ray.index == 0)
+	{
+		 //Stripe pattern
+		 int stripeWidth = 5;
+		 int iz = (ray.hit.z + 1000.0) / stripeWidth;
+		 int ix = (ray.hit.x + 1000.0) / stripeWidth;
+		 int k = (iz + ix) % 2; //2 colors
+		 if (k == 0) color = glm::vec3(0, 1, 0);
+		 else color = glm::vec3(1, 1, 0.5);
+		 obj->setColor(color);
+	}
+
+	// Shadow
 	glm::vec3 lightVec = lightPos - ray.hit;
 	Ray shadowRay(ray.hit, lightVec);
 	shadowRay.closestPt(objects);
-
 	if (shadowRay.index > -1 && shadowRay.dist < glm::length(lightVec)) {
 		color = 0.2f * obj->getColor(); //0.2 = ambient scale factor
 	}
 
+	// Refective
 	if (obj->isReflective() && step < maxRaySteps)
 	{
 		float rho = obj->getReflectionCoeff();
@@ -30,6 +45,30 @@ glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 		Ray reflectedRay(ray.hit, reflectedDir);
 		glm::vec3 reflectedColor = trace(reflectedRay, step + 1);
 		color = color + (rho * reflectedColor);
+	}
+
+	// Refraction
+	if (obj->isRefractive() && step < maxRaySteps) {
+		float eta = 1.0 / obj->getRefractiveIndex();
+		glm::vec3 d = ray.dir;
+		glm::vec3 n = obj->normal(ray.hit);
+		glm::vec3 g = glm::refract(d, n, eta);
+		Ray refRay(ray.hit, g);
+		refRay.closestPt(objects);
+		glm::vec3 m = obj->normal(refRay.hit);
+		glm::vec3 h = glm::refract(g, -m, obj->getRefractiveIndex());
+		Ray exitRay(refRay.hit, h);
+		glm::vec3 refractedColor = trace(exitRay, step + 1);
+		color = color + (refractedColor * obj->getRefractionCoeff());
+	}
+
+	// Transparency
+	if (obj->isTransparent() && step < maxRaySteps && obj->getTransparencyCoeff() != 0) {
+		Ray exitRay(ray.hit, ray.dir);
+		glm::vec3 transColor = trace(exitRay, step + 1);
+
+		float t = std::min(std::max(0.0f, obj->getTransparencyCoeff()), 1.0f);
+		color = color * (1 - t) + transColor * t;
 	}
 
 	return color;

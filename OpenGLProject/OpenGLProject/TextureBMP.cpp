@@ -14,7 +14,7 @@ TextureBMP::TextureBMP(const char* filename)
 	imageWid = 0;
 	imageHgt = 0;
     if (loadBMPImage(filename)) {
-		cout << "Image " << filename << "  loaded successfully." << endl;
+		//cout << "Image " << filename << "  loaded successfully." << endl;
 		//cout << "Width = " << imageWid << "  Height = " << imageHgt <<
 		//	"  Channels = " << imageChnls << endl;
     } else {

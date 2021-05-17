@@ -7,7 +7,7 @@ const float WIDTH = 20.0;
 const float HEIGHT = 20.0;
 const float EDIST = 40.0;
 
-const int NUMDIV = 500;
+const int NUMDIV = 100;
 const int MAX_STEPS = 5;
 
 const float XMIN = -WIDTH * 0.5;
@@ -42,13 +42,10 @@ void Window::draw(Scene scene) {
 		for (int j = 0; j < NUMDIV; j++)
 		{
 			yp = YMIN + j * cellY;
-
 			glm::vec3 dir(xp + 0.5 * cellX, yp + 0.5 * cellY, -EDIST);	//direction of the primary ray
-
 			Ray ray = Ray(eye, dir);
 
 			glm::vec3 col = scene.trace(ray, 1, MAX_STEPS); //Trace the primary ray and get the colour value
-			//drawAt(col, glm::vec2(xp, yp));
 			glColor3f(col.r, col.g, col.b);
 			glVertex2f(xp, yp);				//Draw each cell with its color value
 			glVertex2f(xp + cellX, yp);
@@ -60,22 +57,3 @@ void Window::draw(Scene scene) {
 	glFlush();
 }
 
-void Window::drawAt(glm::vec3 color, glm::vec2 picturePosition) { 
-	glColor3f(color.r, color.g, color.b);
-	glVertex2f(picturePosition.x, picturePosition.y);
-	glVertex2f(picturePosition.x + pixelSize, picturePosition.y);
-	glVertex2f(picturePosition.x + pixelSize, picturePosition.y + pixelSize);
-	glVertex2f(picturePosition.x, picturePosition.y + pixelSize);
-}
-
-//Window::Window() {
-//	
-//};
-//
-//void Window::drawAt(glm::vec3 color, glm::vec2 picturePosition) {
-//	glColor3f(color.r, color.g, color.b);
-//	glVertex2f(picturePosition.x, picturePosition.y);
-//	//glVertex2f(xp + cellX, yp);
-//	//glVertex2f(xp + cellX, yp + cellY);
-//	//glVertex2f(xp, yp + cellY);
-//}
