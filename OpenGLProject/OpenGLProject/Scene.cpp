@@ -30,11 +30,28 @@ glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 
 	// Shadow
 	glm::vec3 lightVec = lightPos - ray.hit;
-	Ray shadowRay(ray.hit, lightVec);
-	shadowRay.closestPt(objects);
-	if (shadowRay.index > -1 && shadowRay.dist < glm::length(lightVec)) {
-		color = 0.2f * obj->getColor(); //0.2 = ambient scale factor
+	Ray* shadowRay;
+	shadowRay = new Ray(ray.hit, lightVec);
+	shadowRay->closestPt(objects);
+	float shadow = 0;
+	for (int i = 0; i < maxRaySteps; i++) {
+		if (shadowRay->index > -1 && shadowRay->dist < glm::length(lightVec)) {
+			float shadowScale = 0.2f;
+			SceneObject* hitObj = objects[shadowRay->index];
+			if (hitObj->isTransparent()) {
+				shadow += (1-shadow) * (1-hitObj->getTransparencyCoeff());
+
+				shadowRay = new Ray(shadowRay->hit, lightVec);
+				shadowRay->closestPt(objects);
+			}
+			else {
+				shadow = 1;
+				break;
+			}
+		}
 	}
+	float shadowScale = 0.8f * (1 - std::min(std::max(0.0f, shadow), 1.0f)) + 0.2;
+	color = shadowScale * color;
 
 	// Refective
 	if (obj->isReflective() && step < maxRaySteps)

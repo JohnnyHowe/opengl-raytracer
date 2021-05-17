@@ -55,20 +55,21 @@ void initialize()
 	//sphere1->setRefractivity(true, 0.9, 2);
 	sphere1->setColor(glm::vec3(0.5, 0.5, 1.0));   //Set colour to blue
 	scene.objects.push_back(sphere1);
-	sphere1->setTransparency(true, 0.8f);
 	//sphere1->setReflectivity(true, 1);
+	sphere1->setTransparency(true, 0.6f);
 
 	Sphere* sphere2 = new Sphere(glm::vec3(10, 3, -70.0), 5.0);
 	sphere2->setColor(glm::vec3(0, 1, 0));   //Set colour to blue
 	scene.objects.push_back(sphere2);
+	sphere2->setTransparency(true, 0.6f);
 
 	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -10, -65.0), 3.0);
 	sphere3->setColor(glm::vec3(0, 0, 0));   //Set colour to blue
 	scene.objects.push_back(sphere3);
 
-	Sphere* sphere4 = new Sphere(glm::vec3(0.0, -15.0, -130.0), 20.0);
-	sphere4->setColor(glm::vec3(0, 0, 1));
-	scene.objects.push_back(sphere4);
+	//Sphere* sphere4 = new Sphere(glm::vec3(0.0, -15.0, -130.0), 20.0);
+	//sphere4->setColor(glm::vec3(0, 0, 1));
+	//scene.objects.push_back(sphere4);
 
 }
 
