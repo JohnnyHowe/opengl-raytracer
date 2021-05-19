@@ -29,6 +29,19 @@ void display() {
 	window.draw(scene);
 }
 
+
+glm::vec3 groundShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
+	glm::vec3 color;
+	int stripeWidth = 5;
+	int iz = (hit.z + 1000.0) / stripeWidth;
+	int ix = (hit.x + 1000.0) / stripeWidth;
+	int k = (iz + ix) % 2; //2 colors
+	if (k == 0) color = glm::vec3(0, 1, 0);
+	else color = glm::vec3(1, 1, 0.5);
+	return color;
+}
+
+
 void createBox(glm::vec3 center, glm::vec3 size, glm::vec3 color, float transparency=0.0f) {
 	// Yes this is super ugly but I have zero motivation right now
 	float minx = center.x - size.x / 2;
@@ -93,13 +106,14 @@ void initialize()
 	scene.objects.push_back(plane);
 	plane->setSpecularity(false);
 
+	plane->shader = &groundShader;
+	plane->useCustomShader = true;
+
 	createBox(glm::vec3(10.0, -10.0, -70), glm::vec3(15, 5, 15), glm::vec3(1.0, 0.5, 0.5), 0.2f);
 
 	Sphere* sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
-	//sphere1->setRefractivity(true, 0.9, 2);
 	sphere1->setColor(glm::vec3(0.5, 0.5, 1.0));   //Set colour to blue
 	scene.objects.push_back(sphere1);
-	//sphere1->setReflectivity(true, 1);
 	sphere1->setTransparency(true, 0.5f);
 
 	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -4.0, -70.0), 3.0);
@@ -109,7 +123,6 @@ void initialize()
 	Sphere* sphere4 = new Sphere(glm::vec3(0.0, -15.0, -150.0), 20.0);
 	sphere4->setColor(glm::vec3(0, 0, 1));
 	scene.objects.push_back(sphere4);
-
 }
 
 

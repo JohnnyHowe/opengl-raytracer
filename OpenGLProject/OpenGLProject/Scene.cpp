@@ -15,19 +15,6 @@ glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 
 	color = obj->lighting(lightPos, -ray.dir, ray.hit);						//Object's colour
 
-	// ground plane tiling
-	if (ray.index == 0)
-	{
-		 //Stripe pattern
-		 int stripeWidth = 5;
-		 int iz = (ray.hit.z + 1000.0) / stripeWidth;
-		 int ix = (ray.hit.x + 1000.0) / stripeWidth;
-		 int k = (iz + ix) % 2; //2 colors
-		 if (k == 0) color = glm::vec3(0, 1, 0);
-		 else color = glm::vec3(1, 1, 0.5);
-		 obj->setColor(color);
-	}
-
 	// Shadow
 	glm::vec3 lightVec = lightPos - ray.hit;
 	Ray* shadowRay;

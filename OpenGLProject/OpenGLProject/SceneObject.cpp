@@ -8,6 +8,7 @@
 -------------------------------------------------------------*/
 
 #include "SceneObject.h"
+#include <iostream>
 
 glm::vec3 SceneObject::getColor()
 {
@@ -16,23 +17,28 @@ glm::vec3 SceneObject::getColor()
 
 glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit)
 {
-	float ambientTerm = 0.2;
-	float diffuseTerm = 0;
-	float specularTerm = 0;
+	if (!useCustomShader) {
+		float ambientTerm = 0.2;
+		float diffuseTerm = 0;
+		float specularTerm = 0;
 
-	glm::vec3 normalVec = normal(hit);
-	glm::vec3 lightVec = lightPos - hit;
-	lightVec = glm::normalize(lightVec);
+		glm::vec3 normalVec = normal(hit);
+		glm::vec3 lightVec = lightPos - hit;
+		lightVec = glm::normalize(lightVec);
 
-	float lDotn = glm::dot(lightVec, normalVec);
-	if (spec_)
-	{
-		glm::vec3 reflVec = glm::reflect(-lightVec, normalVec);
-		float rDotv = glm::dot(reflVec, viewVec);
-		if (rDotv > 0) specularTerm = pow(rDotv, shin_);
+		float lDotn = glm::dot(lightVec, normalVec);
+		if (spec_)
+		{
+			glm::vec3 reflVec = glm::reflect(-lightVec, normalVec);
+			float rDotv = glm::dot(reflVec, viewVec);
+			if (rDotv > 0) specularTerm = pow(rDotv, shin_);
+		}
+		glm::vec3 colorSum = ambientTerm * color_ + lDotn * color_ + specularTerm * glm::vec3(1);
+		return colorSum;
 	}
-	glm::vec3 colorSum = ambientTerm * color_ + lDotn * color_ + specularTerm * glm::vec3(1);
-	return colorSum;
+	else {
+		return (*shader)(lightPos, viewVec, hit);
+	}
 }
 
 float SceneObject::getReflectionCoeff()
