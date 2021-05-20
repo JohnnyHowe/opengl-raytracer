@@ -41,6 +41,13 @@ glm::vec3 groundShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
 	return color;
 }
 
+glm::vec3 fancySphereShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
+	glm::vec3 color(0, 0.5, 0.5);
+	float t = 2.0f;
+	color.x = sin((hit.y + hit.x + hit.z) * t);
+	return color;
+}
+
 
 void createBox(glm::vec3 center, glm::vec3 size, glm::vec3 color, float transparency=0.0f) {
 	// Yes this is super ugly but I have zero motivation right now
@@ -120,6 +127,8 @@ void initialize()
 	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -4.0, -70.0), 3.0);
 	sphere3->setColor(glm::vec3(0, 1, 0));
 	scene.objects.push_back(sphere3);
+	sphere3->useCustomShader = true;
+	sphere3->shader = fancySphereShader;
 }
 
 
