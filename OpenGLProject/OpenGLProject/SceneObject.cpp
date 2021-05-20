@@ -18,7 +18,7 @@ glm::vec3 SceneObject::getColor()
 glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit)
 {
 	if (!useCustomShader) {
-		float ambientTerm = 0.2;
+		float ambientTerm = 0.1;
 		float diffuseTerm = 0;
 		float specularTerm = 0;
 
