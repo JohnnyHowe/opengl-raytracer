@@ -105,30 +105,44 @@ void initialize()
 
 	glClearColor(0, 0, 0, 1);
 
-	Plane* plane = new Plane(glm::vec3(-30., -15, -40), //Point A
-		glm::vec3(30., -15, -40), //Point B
-		glm::vec3(30., -15, -200), //Point C
-		glm::vec3(-30., -15, -200)); //Point D
-	plane->setColor(glm::vec3(0.8, 0.8, 0));
-	scene.objects.push_back(plane);
-	plane->setSpecularity(false);
+	glm::vec3 cameraPos(0, 40, 0);
+	float roomDepth = 200.0f;
+	float roomWidth = 60.0f;
+	float roofHeight = 50.0f;
 
-	plane->shader = &groundShader;
-	plane->useCustomShader = true;
+	// Floor
+	Plane* floor = new Plane(glm::vec3(-roomWidth / 2.0f, -15, -40), //Point A
+							 glm::vec3(roomWidth / 2.0f, -15, -40), //Point B
+						     glm::vec3(roomWidth / 2.0f, -15, -40 - roomDepth), //Point C
+							 glm::vec3(-roomWidth / 2.0f, -15, -40 - roomDepth)); //Point D
+	floor->setColor(glm::vec3(0.8, 0.8, 0));
+	scene.objects.push_back(floor);
+	floor->setSpecularity(false);
+	floor->shader = &groundShader;
+	floor->useCustomShader = true;
 
-	createBox(glm::vec3(10.0, -10.0, -70), glm::vec3(15, 5, 15), glm::vec3(1.0, 0.5, 0.5), 0.5f);
+	// Roof
+	Plane* roof = new Plane(glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40), //Point A
+							glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40), //Point B
+						    glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth), //Point C
+							glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth)); //Point D
+	roof->setColor(glm::vec3(0.8, 0.8, 0));
+	scene.objects.push_back(roof);
+	roof->setSpecularity(false);
 
-	Sphere* sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
-	sphere1->setColor(glm::vec3(0.9, 0.9, 1.0));   //Set colour to blue
-	scene.objects.push_back(sphere1);
-	sphere1->setRefractivity(true, 0.9f, 1.5f);
-	sphere1->setTransparency(true, 0.8f);
+	//createBox(glm::vec3(10.0, -10.0, -70), glm::vec3(15, 5, 15), glm::vec3(1.0, 0.5, 0.5), 0.5f);
 
-	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -4.0, -70.0), 3.0);
-	sphere3->setColor(glm::vec3(0, 1, 0));
-	scene.objects.push_back(sphere3);
-	sphere3->useCustomShader = true;
-	sphere3->shader = fancySphereShader;
+	//Sphere* sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
+	//sphere1->setColor(glm::vec3(0.9, 0.9, 1.0));   //Set colour to blue
+	//scene.objects.push_back(sphere1);
+	//sphere1->setRefractivity(true, 0.9f, 1.5f);
+	//sphere1->setTransparency(true, 0.8f);
+
+	//Sphere* sphere3 = new Sphere(glm::vec3(10.0, -4.0, -70.0), 3.0);
+	//sphere3->setColor(glm::vec3(0, 1, 0));
+	//scene.objects.push_back(sphere3);
+	//sphere3->useCustomShader = true;
+	//sphere3->shader = fancySphereShader;
 }
 
 

@@ -9,5 +9,5 @@ public: glm::vec2 viewportMax;
 public: int pixelSize;
 public: Window();
 public: void draw(Scene scene);
-public: bool antiAliasing = true;
+public: bool antiAliasing = false;
 };

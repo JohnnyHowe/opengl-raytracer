@@ -22,6 +22,7 @@ Window::Window() {
 	viewportMin.y = YMIN;
 	viewportMax.x = XMAX;
 	viewportMax.y = YMAX;
+	antiAliasing = false;
 }
 
 void Window::draw(Scene scene) {
