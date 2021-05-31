@@ -15,7 +15,7 @@ glm::vec3 SceneObject::getColor()
 	return color_;
 }
 
-glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit)
+glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, bool lit)
 {
 	if (!useCustomShader) {
 		float ambientTerm = 0.1;
@@ -33,12 +33,27 @@ glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3
 			float rDotv = glm::dot(reflVec, viewVec);
 			if (rDotv > 0) specularTerm = pow(rDotv, shin_);
 		}
-		glm::vec3 colorSum = ambientTerm * color_ + lDotn * color_ + specularTerm * glm::vec3(1);
+		glm::vec3 colorSum;
+		if (lit) {
+			colorSum = ambientTerm * color_ + lDotn * color_ + specularTerm * glm::vec3(1);
+		}
+		else {
+			colorSum = ambientTerm * color_;
+		}
 		return colorSum;
 	}
 	else {
 		return (*shader)(lightPos, viewVec, hit);
 	}
+}
+
+glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 lightDirection, float maxLightAngle, glm::vec3 viewVec, glm::vec3 hit) {
+	glm::vec3 normalVec = normal(hit);
+	glm::vec3 da=glm::normalize(lightDirection);
+	glm::vec3 db = glm::normalize(hit - lightPos);
+	float angle = glm::acos(glm::dot(da, db));
+	bool lit = angle <= maxLightAngle;
+	return lighting(lightPos, viewVec, hit, lit);
 }
 
 float SceneObject::getReflectionCoeff()

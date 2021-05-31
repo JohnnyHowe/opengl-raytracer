@@ -5,7 +5,12 @@
 
 glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 	glm::vec3 backgroundCol(0);						//Background colour = (0,0,0)
-	glm::vec3 lightPos(10, 40, -3);					//Light's position
+
+	//glm::vec3 lightPos(10, 40, -3);					//Light's position
+	glm::vec3 lightPos(0, 0, -80);					//Light's position
+	glm::vec3 lightDir(0, -1, 0);
+	float spotlightSize = 0.8f;
+
 	glm::vec3 color(0);
 	SceneObject* obj;
 
@@ -13,7 +18,8 @@ glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 	if (ray.index == -1) return backgroundCol;		//no intersection
 	obj = objects[ray.index];					//object on which the closest point of intersection is found
 
-	color = obj->lighting(lightPos, -ray.dir, ray.hit);						//Object's colour
+	color = obj->lighting(lightPos, lightDir, spotlightSize, -ray.dir, ray.hit);						//Object's colour
+	// color = obj->lighting(lightPos, -ray.dir, ray.hit);						//Object's colour
 
 	// Shadow
 	glm::vec3 lightVec = lightPos - ray.hit;

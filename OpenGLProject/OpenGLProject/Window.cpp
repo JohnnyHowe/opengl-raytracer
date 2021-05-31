@@ -7,7 +7,7 @@ const float WIDTH = 20.0;
 const float HEIGHT = 20.0;
 const float EDIST = 40.0;
 
-const int NUMDIV = 200;
+const int NUMDIV = 100;
 const int MAX_STEPS = 5;
 
 const float XMIN = -WIDTH * 0.5;
@@ -39,7 +39,7 @@ void Window::draw(Scene scene) {
 
 	for (int i = 0; i < NUMDIV; i++)	//Scan every cell of the image plane
 	{
-		std::cout << (float) i * 100.0f / (float) NUMDIV << "% \n";
+		//std::cout << (float) i * 100.0f / (float) NUMDIV << "% \n";
 		xp = XMIN + i * cellX;
 		for (int j = 0; j < NUMDIV; j++)
 		{

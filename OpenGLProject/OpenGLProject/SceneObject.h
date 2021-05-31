@@ -36,7 +36,8 @@ public:
 	glm::vec3(*shader)(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit);	// Shader
 	bool useCustomShader = false;
 
-	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit);
+	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, bool lit = true);
+	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 lightDirection, float maxLightAngle, glm::vec3 viewVec, glm::vec3 hit);
 	void setColor(glm::vec3 col);
 	void setReflectivity(bool flag);
 	void setReflectivity(bool flag, float refl_coeff);
