@@ -91,23 +91,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(MSBuildStartupDirectory)\OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(MSBuildStartupDirectory)\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(MSBuildStartupDirectory)\OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(MSBuildStartupDirectory)\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(MSBuildStartupDirectory)\OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(MSBuildStartupDirectory)\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\uni-repo\COSC363\labs\OpenGLProject\OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(MSBuildStartupDirectory)\OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(MSBuildStartupDirectory)\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
