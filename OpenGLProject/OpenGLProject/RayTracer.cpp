@@ -18,6 +18,7 @@
 #include <GL/freeglut.h>
 #include "Scene.h"
 #include "Window.h"
+#include "SceneObject.h"
 using namespace std;
 
 
@@ -30,7 +31,7 @@ void display() {
 }
 
 
-glm::vec3 groundShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
+glm::vec3 groundShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject *self) {
 	glm::vec3 color;
 	int stripeWidth = 5;
 	int iz = (hit.z + 1000.0) / stripeWidth;
@@ -41,12 +42,21 @@ glm::vec3 groundShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
 	return color;
 }
 
-glm::vec3 fancySphereShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
+glm::vec3 fancySphereShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject *self) {
 	glm::vec3 color(0.5, 0.5, 0.9);
 	float t = 2.0f;
 	color.y = sin((hit.y + hit.x + hit.z) * t);
 	color.x = cos((-hit.y + hit.x + hit.z) * t);
 	return color;
+}
+
+
+glm::vec3 textureShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject *self) {
+	float roomWidth = 70.0f;
+	float roofHeight = 70.0f;
+	float cx = -roomWidth / 2.0f;
+	float cy = -roofHeight / 2.0f;
+	return texture.getColorAt((hit.x - cx) / roomWidth, (hit.y - cy) / roofHeight);
 }
 
 
@@ -102,14 +112,14 @@ void initialize()
 {
 	glMatrixMode(GL_PROJECTION);
     gluOrtho2D(window.viewportMin.x, window.viewportMax.x, window.viewportMin.y, window.viewportMax.y);
-	texture = TextureBMP("G:/uni-repo/COSC363/labs/raytracing-2/Butterfly.bmp");
+	texture = TextureBMP("house.bmp");
 
-	window.antiAliasing = false;
+	window.antiAliasing = true;
 	glClearColor(0, 0, 0, 1);
 
 	glm::vec3 cameraPos(0, 40, 0);
 	float roomDepth = 200.0f;
-	float roomWidth = 60.0f;
+	float roomWidth = 70.0f;
 	float roofHeight = 50.0f;
 
 	// Floor
@@ -129,16 +139,27 @@ void initialize()
 						    glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth), //Point C
 							glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth)); //Point D
 	roof->setColor(glm::vec3(0.8, 0.8, 0));
-	//scene.objects.push_back(roof);
+	scene.objects.push_back(roof);
 	roof->setSpecularity(false);
+
+	// Back
+	Plane* back = new Plane(glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth), //Point A
+							glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth), //Point B
+						    glm::vec3(roomWidth / 2.0f, -16, -40 - roomDepth), //Point C
+							glm::vec3(-roomWidth / 2.0f, -16, -40 - roomDepth)); //Point D
+	back->setColor(glm::vec3(0.8, 0.8, 0));
+	scene.objects.push_back(back);
+	back->setSpecularity(false);
+	back->useCustomShader = true;
+	back->shader = textureShader;
 
 	createBox(glm::vec3(0, -12.5, -115.0), glm::vec3(20, 5, 40), glm::vec3(1.0, 0.5, 0.5));
 
 	Sphere* sphere1 = new Sphere(glm::vec3(0.0, 5, -105.0), 15.0);
 	sphere1->setColor(glm::vec3(0.9, 0.9, 1.0));   //Set colour to blue
 	scene.objects.push_back(sphere1);
-	sphere1->setRefractivity(true, 0.9f, 1.5f);
-	sphere1->setTransparency(true, 0.8f);
+	sphere1->setRefractivity(true, 1.0f, 1.3f);
+	//sphere1->setTransparency(true, 0.8f);
 
 	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -10.0, -82.0), 5.0);
 	sphere3->setColor(glm::vec3(0, 1, 0));
@@ -157,7 +178,7 @@ int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(1000, 1000);
 	glutInitWindowPosition(20, 20);
 	glutCreateWindow("Raytracing");
 

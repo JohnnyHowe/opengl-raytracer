@@ -33,7 +33,7 @@ public:
     virtual float intersect(glm::vec3 p0, glm::vec3 dir) = 0;
 	virtual glm::vec3 normal(glm::vec3 pos) = 0;
 	virtual ~SceneObject() {}
-	glm::vec3(*shader)(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit);	// Shader
+	glm::vec3(*shader)(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject* self);	// Shader
 	bool useCustomShader = false;
 
 	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects, bool lit = true);

@@ -19,7 +19,7 @@ glm::vec3 SceneObject::getColor()
 glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects, bool lit)
 {
 	glm::vec3 color;
-	if (useCustomShader) {color= (*shader)(lightPos, viewVec, hit);}
+	if (useCustomShader) {color= (*shader)(lightPos, viewVec, hit, this);}
 	else { color = getColor(); }
 
 	float shadow = 0.0f;
