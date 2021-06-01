@@ -13,34 +13,7 @@ glm::vec3 Scene::trace(Ray ray, int step, int maxRaySteps = 5) {
 	if (ray.index == -1) return backgroundCol;		//no intersection
 	obj = objects[ray.index];					//object on which the closest point of intersection is found
 
-	color = obj->lighting(spotlightPos, spotlightDir, spotlightSize, -ray.dir, ray.hit);						//Object's colour
-
-	// Shadow
-	glm::vec3 lightVec = sunPos - ray.hit;
-	Ray* shadowRay;
-	shadowRay = new Ray(ray.hit, lightVec);
-	shadowRay->closestPt(objects);
-	float shadow = 0;
-
-	for (int i = 0; i < maxRaySteps; i++) {
-		if (shadowRay->index > -1 && shadowRay->dist < glm::length(lightVec)) {
-
-			SceneObject* hitObj = objects[shadowRay->index];
-
-			if (hitObj->isTransparent()) {
-				shadow += (1-shadow) * (1-hitObj->getTransparencyCoeff());
-
-				shadowRay = new Ray(shadowRay->hit, lightVec);
-				shadowRay->closestPt(objects);
-			}
-			else {
-				shadow = 1;
-				break;
-			}
-		}
-	}
-	float shadowScale = 0.8f * (1 - std::min(std::max(0.0f, shadow), 1.0f)) + 0.2;
-	color = shadowScale * color;
+	color = obj->lighting(spotlightPos, spotlightDir, spotlightSize, -ray.dir, ray.hit, objects);						//Object's colour
 
 	// Refective
 	if (obj->isReflective() && step < maxRaySteps)

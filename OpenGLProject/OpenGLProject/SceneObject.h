@@ -13,7 +13,7 @@
 #ifndef H_SOBJECT
 #define H_SOBJECT
 #include <glm/glm.hpp>
-
+#include <vector>
 
 class SceneObject 
 {
@@ -36,8 +36,8 @@ public:
 	glm::vec3(*shader)(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit);	// Shader
 	bool useCustomShader = false;
 
-	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, bool lit = true);
-	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 lightDirection, float maxLightAngle, glm::vec3 viewVec, glm::vec3 hit);
+	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects, bool lit = true);
+	glm::vec3 lighting(glm::vec3 lightPos, glm::vec3 lightDirection, float maxLightAngle, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects);
 	void setColor(glm::vec3 col);
 	void setReflectivity(bool flag);
 	void setReflectivity(bool flag, float refl_coeff);

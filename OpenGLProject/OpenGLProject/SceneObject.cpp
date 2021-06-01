@@ -8,6 +8,7 @@
 -------------------------------------------------------------*/
 
 #include "SceneObject.h"
+#include "Ray.h"
 #include <iostream>
 
 glm::vec3 SceneObject::getColor()
@@ -15,10 +16,12 @@ glm::vec3 SceneObject::getColor()
 	return color_;
 }
 
-glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, bool lit)
+glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects, bool lit)
 {
+	glm::vec3 color;
+	float shadow = 0.0f;
+		float ambientTerm = 0.1;
 	if (!useCustomShader) {
-		float ambientTerm = 0.2;
 		float diffuseTerm = 0;
 		float specularTerm = 0;
 
@@ -35,25 +38,53 @@ glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3
 		}
 		glm::vec3 colorSum;
 		if (lit) {
-			colorSum = ambientTerm * color_ + std::max(lDotn, 0.0f) * color_ + specularTerm * glm::vec3(1);
+			shadow = 1- std::max(lDotn, 0.0f);
+			colorSum = color_ + specularTerm * glm::vec3(1);
 		}
 		else {
-			colorSum = ambientTerm * color_;
+			shadow = 1;
+			colorSum = color_;
 		}
-		return colorSum;
+		color = colorSum;
 	}
 	else {
-		return (*shader)(lightPos, viewVec, hit);
+		color = (*shader)(lightPos, viewVec, hit);
 	}
+
+	// Shadow
+	glm::vec3 lightVec = lightPos - hit;
+	Ray* shadowRay;
+	shadowRay = new Ray(hit, lightVec);
+	shadowRay->closestPt(objects);
+	for (int i = 0; i < 5; i++) {
+		if (shadowRay->index > -1 && shadowRay->dist < glm::length(lightVec)) {
+
+			SceneObject* hitObj = objects[shadowRay->index];
+
+			if (hitObj->isTransparent()) {
+				shadow += (1-shadow) * (1-hitObj->getTransparencyCoeff());
+
+				shadowRay = new Ray(shadowRay->hit, lightVec);
+				shadowRay->closestPt(objects);
+			}
+			else {
+				shadow = 1;
+				break;
+			}
+		}
+	}
+	float shadowScale = (1-ambientTerm) * (1 - std::min(std::max(0.0f, shadow), 1.0f)) + ambientTerm;
+	color = shadowScale * color;
+	return color;
 }
 
-glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 lightDirection, float maxLightAngle, glm::vec3 viewVec, glm::vec3 hit) {
+glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 lightDirection, float maxLightAngle, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects) {
 	glm::vec3 normalVec = normal(hit);
 	glm::vec3 da=glm::normalize(lightDirection);
 	glm::vec3 db = glm::normalize(hit - lightPos);
 	float angle = glm::acos(glm::dot(da, db));
 	bool lit = angle <= maxLightAngle;
-	return lighting(lightPos, viewVec, hit, lit);
+	return lighting(lightPos, viewVec, hit, objects, lit);
 }
 
 float SceneObject::getReflectionCoeff()

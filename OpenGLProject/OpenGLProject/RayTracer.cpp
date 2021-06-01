@@ -103,6 +103,7 @@ void initialize()
     gluOrtho2D(window.viewportMin.x, window.viewportMax.x, window.viewportMin.y, window.viewportMax.y);
 	texture = TextureBMP("G:/uni-repo/COSC363/labs/raytracing-2/Butterfly.bmp");
 
+	window.antiAliasing = false;
 	scene.spotlightSize = 0.8f;
 	
 	glClearColor(0, 0, 0, 1);
