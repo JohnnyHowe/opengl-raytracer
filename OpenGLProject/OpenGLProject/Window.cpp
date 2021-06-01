@@ -39,7 +39,7 @@ void Window::draw(Scene scene) {
 
 	for (int i = 0; i < NUMDIV; i++)	//Scan every cell of the image plane
 	{
-		//std::cout << (float) i * 100.0f / (float) NUMDIV << "% \n";
+		std::cout << (float) i * 100.0f / (float) NUMDIV << "% \n";
 		xp = XMIN + i * cellX;
 		for (int j = 0; j < NUMDIV; j++)
 		{

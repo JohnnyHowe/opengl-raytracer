@@ -42,9 +42,10 @@ glm::vec3 groundShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
 }
 
 glm::vec3 fancySphereShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit) {
-	glm::vec3 color(0, 0.5, 0.5);
+	glm::vec3 color(0.5, 0.5, 0.9);
 	float t = 2.0f;
-	color.x = sin((hit.y + hit.x + hit.z) * t);
+	color.y = sin((hit.y + hit.x + hit.z) * t);
+	color.x = cos((-hit.y + hit.x + hit.z) * t);
 	return color;
 }
 
@@ -139,12 +140,16 @@ void initialize()
 	sphere1->setRefractivity(true, 0.9f, 1.5f);
 	sphere1->setTransparency(true, 0.8f);
 
-	Sphere* sphere3 = new Sphere(glm::vec3(8.0, -10.0, -82.0), 5.0);
+	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -10.0, -82.0), 5.0);
 	sphere3->setColor(glm::vec3(0, 1, 0));
-	//scene.objects.push_back(sphere3);
+	scene.objects.push_back(sphere3);
 	sphere3->setTransparency(true, 0.7f);
-	////sphere3->useCustomShader = true;
-	////sphere3->shader = fancySphereShader;
+
+	Sphere* sphere2 = new Sphere(glm::vec3(5.0, -13.0, -75.0), 2.0);
+	sphere2->setColor(glm::vec3(1, 0, 0));
+	scene.objects.push_back(sphere2);
+	sphere2->useCustomShader = true;
+	sphere2->shader = fancySphereShader;
 }
 
 
