@@ -19,12 +19,15 @@ glm::vec3 SceneObject::getColor()
 glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, std::vector<SceneObject*> objects, bool lit)
 {
 	glm::vec3 color;
-	float shadow = 0.0f;
-		float ambientTerm = 0.1;
-	if (!useCustomShader) {
-		float diffuseTerm = 0;
-		float specularTerm = 0;
+	if (useCustomShader) {color= (*shader)(lightPos, viewVec, hit);}
+	else { color = getColor(); }
 
+	float shadow = 0.0f;
+	float ambientTerm = 0.2;
+	float diffuseTerm = 0;
+	float specularTerm = 0;
+
+	if (true) {
 		glm::vec3 normalVec = normal(hit);
 		glm::vec3 lightVec = lightPos - hit;
 		lightVec = glm::normalize(lightVec);
@@ -38,17 +41,14 @@ glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3
 		}
 		glm::vec3 colorSum;
 		if (lit) {
-			shadow = 1- std::max(lDotn, 0.0f);
-			colorSum = color_ + specularTerm * glm::vec3(1);
+			shadow = 1 - std::max(lDotn, 0.0f);
+			colorSum = color + specularTerm * glm::vec3(1);
 		}
 		else {
 			shadow = 1;
-			colorSum = color_;
+			colorSum = color;
 		}
 		color = colorSum;
-	}
-	else {
-		color = (*shader)(lightPos, viewVec, hit);
 	}
 
 	// Shadow

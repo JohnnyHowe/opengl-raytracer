@@ -104,8 +104,6 @@ void initialize()
 	texture = TextureBMP("G:/uni-repo/COSC363/labs/raytracing-2/Butterfly.bmp");
 
 	window.antiAliasing = false;
-	scene.spotlightSize = 0.8f;
-	
 	glClearColor(0, 0, 0, 1);
 
 	glm::vec3 cameraPos(0, 40, 0);
@@ -121,8 +119,8 @@ void initialize()
 	floor->setColor(glm::vec3(0.8, 0.8, 0));
 	scene.objects.push_back(floor);
 	floor->setSpecularity(false);
-//	floor->shader = &groundShader;
-	//floor->useCustomShader = true;
+	floor->shader = &groundShader;
+	floor->useCustomShader = true;
 
 	// Roof
 	Plane* roof = new Plane(glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40), //Point A
@@ -133,17 +131,18 @@ void initialize()
 	//scene.objects.push_back(roof);
 	roof->setSpecularity(false);
 
-	//createBox(glm::vec3(10.0, -10.0, -70), glm::vec3(15, 5, 15), glm::vec3(1.0, 0.5, 0.5), 0.5f);
+	createBox(glm::vec3(0, -12.5, -115.0), glm::vec3(20, 5, 40), glm::vec3(1.0, 0.5, 0.5));
 
-	//Sphere* sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
-	//sphere1->setColor(glm::vec3(0.9, 0.9, 1.0));   //Set colour to blue
-	//scene.objects.push_back(sphere1);
-	////sphere1->setRefractivity(true, 0.9f, 1.5f);
-	////sphere1->setTransparency(true, 0.8f);
+	Sphere* sphere1 = new Sphere(glm::vec3(0.0, 5, -105.0), 15.0);
+	sphere1->setColor(glm::vec3(0.9, 0.9, 1.0));   //Set colour to blue
+	scene.objects.push_back(sphere1);
+	sphere1->setRefractivity(true, 0.9f, 1.5f);
+	sphere1->setTransparency(true, 0.8f);
 
 	Sphere* sphere3 = new Sphere(glm::vec3(8.0, -10.0, -82.0), 5.0);
 	sphere3->setColor(glm::vec3(0, 1, 0));
-	scene.objects.push_back(sphere3);
+	//scene.objects.push_back(sphere3);
+	sphere3->setTransparency(true, 0.7f);
 	////sphere3->useCustomShader = true;
 	////sphere3->shader = fancySphereShader;
 }
