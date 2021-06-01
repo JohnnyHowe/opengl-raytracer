@@ -21,10 +21,13 @@
 #include "SceneObject.h"
 using namespace std;
 
+const float M_1_PI = 1.0 / 3.1415926535897932384626433832795;
+const float M_1_2PI = 1.0 / 6.283185307179586476925286766559;
 
 Scene scene;
 Window window;
 TextureBMP texture;
+TextureBMP texture2;
 
 void display() {
 	window.draw(scene);
@@ -57,6 +60,21 @@ glm::vec3 textureShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, Sc
 	float cx = -roomWidth / 2.0f;
 	float cy = -roofHeight / 2.0f;
 	return texture.getColorAt((hit.x - cx) / roomWidth, (hit.y - cy) / roofHeight);
+}
+
+glm::vec3 leftWallShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject* self) {
+	glm::vec3 color(0, 0, 1);
+	color.x = std::min(std::max(0.0f, (hit.y+15) / 100.0f), 1.0f);
+	color.y = std::min(std::max(0.0f, (-hit.z-100) / 200.0f), 1.0f);
+	color.z = std::min(std::max(0.0f, hit.x / 35.0f), 1.0f);
+	return color;
+}
+
+glm::vec3 sphereImageShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject* self) {
+	glm::vec3 n_normal = glm::normalize(self->normal(hit));
+	float texture_coordinatex = 0.5f - std::atan2(n_normal.z, n_normal.x) * ((float) M_1_2PI);
+    float texture_coordinatey = 0.5f - std::asin(-n_normal.y) * ((float) M_1_PI);
+	return texture2.getColorAt(texture_coordinatex, texture_coordinatey);
 }
 
 
@@ -113,14 +131,15 @@ void initialize()
 	glMatrixMode(GL_PROJECTION);
     gluOrtho2D(window.viewportMin.x, window.viewportMax.x, window.viewportMin.y, window.viewportMax.y);
 	texture = TextureBMP("house.bmp");
+	texture2 = TextureBMP("map.bmp");
 
-	window.antiAliasing = true;
+	window.antiAliasing = false;
 	glClearColor(0, 0, 0, 1);
 
 	glm::vec3 cameraPos(0, 40, 0);
 	float roomDepth = 200.0f;
 	float roomWidth = 70.0f;
-	float roofHeight = 50.0f;
+	float roofHeight = 49.0f;
 
 	// Floor
 	Plane* floor = new Plane(glm::vec3(-roomWidth / 2.0f, -15, -40), //Point A
@@ -153,6 +172,28 @@ void initialize()
 	back->useCustomShader = true;
 	back->shader = textureShader;
 
+	// Left
+	Plane* left = new Plane(glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth), //Point A
+							glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40), //Point B
+						    glm::vec3(-roomWidth / 2.0f, -16, -40), //Point C
+							glm::vec3(-roomWidth / 2.0f, -16, -40 - roomDepth)); //Point D
+	left->setColor(glm::vec3(0.8, 0.8, 0));
+	scene.objects.push_back(left);
+	left->setSpecularity(false);
+	left->useCustomShader = true;
+	left->shader = leftWallShader;
+
+	// Right
+	Plane* right = new Plane(glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40 - roomDepth), //Point A
+							glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40), //Point B
+						    glm::vec3(roomWidth / 2.0f, -16, -40), //Point C
+							glm::vec3(roomWidth / 2.0f, -16, -40 - roomDepth)); //Point D
+	right->setColor(glm::vec3(0.8, 0.8, 0));
+	scene.objects.push_back(right);
+	right->setSpecularity(false);
+	right->useCustomShader = true;
+	right->shader = leftWallShader;
+
 	createBox(glm::vec3(0, -12.5, -115.0), glm::vec3(20, 5, 40), glm::vec3(1.0, 0.5, 0.5));
 
 	Sphere* sphere1 = new Sphere(glm::vec3(0.0, 5, -105.0), 15.0);
@@ -166,6 +207,12 @@ void initialize()
 	scene.objects.push_back(sphere3);
 	sphere3->setTransparency(true, 0.7f);
 
+	Sphere* sphere4 = new Sphere(glm::vec3(-10.0, -11.0, -82.0), 4.0);
+	sphere4->setColor(glm::vec3(1, 0, 0));
+	scene.objects.push_back(sphere4);
+	sphere4->useCustomShader = true;
+	sphere4->shader = sphereImageShader;
+
 	Sphere* sphere2 = new Sphere(glm::vec3(5.0, -13.0, -75.0), 2.0);
 	sphere2->setColor(glm::vec3(1, 0, 0));
 	scene.objects.push_back(sphere2);
@@ -178,7 +225,7 @@ int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(1000, 1000);
+	glutInitWindowSize(600, 600);
 	glutInitWindowPosition(20, 20);
 	glutCreateWindow("Raytracing");
 
