@@ -7,7 +7,7 @@ const float WIDTH = 20.0;
 const float HEIGHT = 20.0;
 const float EDIST = 40.0;
 
-const int NUMDIV = 300;
+const int NUMDIV = 900;
 const int MAX_STEPS = 5;
 
 const float XMIN = -WIDTH * 0.5;

@@ -133,7 +133,7 @@ void initialize()
 	texture = TextureBMP("house.bmp");
 	texture2 = TextureBMP("map.bmp");
 
-	window.antiAliasing = false;
+	window.antiAliasing = true;
 	glClearColor(0, 0, 0, 1);
 
 	glm::vec3 cameraPos(0, 40, 0);
@@ -202,10 +202,21 @@ void initialize()
 	sphere1->setRefractivity(true, 1.0f, 1.3f);
 	//sphere1->setTransparency(true, 0.8f);
 
+	float tr = 0.8f;
 	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -10.0, -82.0), 5.0);
 	sphere3->setColor(glm::vec3(0, 1, 0));
 	scene.objects.push_back(sphere3);
-	sphere3->setTransparency(true, 0.7f);
+	sphere3->setTransparency(true, tr);
+
+	Sphere* sphere5 = new Sphere(glm::vec3(10.0, -12.0, -82.0), 3.0);
+	sphere5->setColor(glm::vec3(0, 0, 1));
+	scene.objects.push_back(sphere5);
+	sphere5->setTransparency(true, tr);
+
+	Sphere* sphere6 = new Sphere(glm::vec3(10.0, -14.0, -82.0), 1.0);
+	sphere6->setColor(glm::vec3(1, 0, 0));
+	scene.objects.push_back(sphere6);
+	sphere6->setTransparency(true, tr);
 
 	Sphere* sphere4 = new Sphere(glm::vec3(-10.0, -11.0, -82.0), 4.0);
 	sphere4->setColor(glm::vec3(1, 0, 0));
@@ -225,7 +236,7 @@ int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(600, 600);
+	glutInitWindowSize(900, 900);
 	glutInitWindowPosition(20, 20);
 	glutCreateWindow("Raytracing");
 
