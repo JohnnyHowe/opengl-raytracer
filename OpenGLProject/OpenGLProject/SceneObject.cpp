@@ -18,7 +18,7 @@ glm::vec3 SceneObject::getColor()
 glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, bool lit)
 {
 	if (!useCustomShader) {
-		float ambientTerm = 0.1;
+		float ambientTerm = 0.2;
 		float diffuseTerm = 0;
 		float specularTerm = 0;
 
@@ -35,7 +35,7 @@ glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3
 		}
 		glm::vec3 colorSum;
 		if (lit) {
-			colorSum = ambientTerm * color_ + lDotn * color_ + specularTerm * glm::vec3(1);
+			colorSum = ambientTerm * color_ + std::max(lDotn, 0.0f) * color_ + specularTerm * glm::vec3(1);
 		}
 		else {
 			colorSum = ambientTerm * color_;
