@@ -21,8 +21,8 @@
 #include "SceneObject.h"
 using namespace std;
 
-const float M_1_PI = 1.0 / 3.1415926535897932384626433832795;
-const float M_1_2PI = 1.0 / 6.283185307179586476925286766559;
+const float ONEOVERPI = 1.0 / 3.1415926535897932384626433832795;
+const float ONEOVERTWOPI = 1.0 / 6.283185307179586476925286766559;
 
 Scene scene;
 Window window;
@@ -72,8 +72,8 @@ glm::vec3 leftWallShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, S
 
 glm::vec3 sphereImageShader(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3 hit, SceneObject* self) {
 	glm::vec3 n_normal = glm::normalize(self->normal(hit));
-	float texture_coordinatex = 0.5f - std::atan2(n_normal.z, n_normal.x) * ((float) M_1_2PI);
-    float texture_coordinatey = 0.5f - std::asin(-n_normal.y) * ((float) M_1_PI);
+	float texture_coordinatex = 0.5f - std::atan2(n_normal.z, n_normal.x) * ((float) ONEOVERTWOPI);
+    float texture_coordinatey = 0.5f - std::asin(-n_normal.y) * ((float) ONEOVERPI);
 	return texture2.getColorAt(texture_coordinatex, texture_coordinatey);
 }
 
@@ -197,9 +197,9 @@ void initialize()
 	createBox(glm::vec3(0, -12.5, -115.0), glm::vec3(20, 5, 40), glm::vec3(1.0, 0.5, 0.5));
 
 	Sphere* sphere1 = new Sphere(glm::vec3(0.0, 5, -105.0), 15.0);
-	sphere1->setColor(glm::vec3(0.9, 0.9, 1.0));   //Set colour to blue
+	sphere1->setColor(glm::vec3(1.0, 1.0, 1.0));   //Set colour to blue
 	scene.objects.push_back(sphere1);
-	sphere1->setRefractivity(true, 1.0f, 1.3f);
+	sphere1->setRefractivity(true, 0.9f, 1.3f);
 	//sphere1->setTransparency(true, 0.8f);
 
 	float tr = 0.8f;
@@ -218,11 +218,12 @@ void initialize()
 	scene.objects.push_back(sphere6);
 	sphere6->setTransparency(true, tr);
 
-	Sphere* sphere4 = new Sphere(glm::vec3(-10.0, -11.0, -82.0), 4.0);
+	Sphere* sphere4 = new Sphere(glm::vec3(-10.0, -6.0, -82.0), 4.0);
 	sphere4->setColor(glm::vec3(1, 0, 0));
 	scene.objects.push_back(sphere4);
 	sphere4->useCustomShader = true;
 	sphere4->shader = sphereImageShader;
+	createBox(glm::vec3(-10, -12.5, -82), glm::vec3(5, 5, 5), glm::vec3(0.5, 0.5, 1.0));
 
 	Sphere* sphere2 = new Sphere(glm::vec3(5.0, -13.0, -75.0), 2.0);
 	sphere2->setColor(glm::vec3(1, 0, 0));
@@ -236,9 +237,9 @@ int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(900, 900);
+	glutInitWindowSize(1000, 1000);
 	glutInitWindowPosition(20, 20);
-	glutCreateWindow("Raytracing");
+	glutCreateWindow("joh29 Raytracer");
 
 	glutDisplayFunc(display);
 	initialize();

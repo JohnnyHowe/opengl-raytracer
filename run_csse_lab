@@ -1,0 +1,4 @@
+cmake .
+make
+cd OpenGLProject/OpenGLProject
+./joh29_raytracer

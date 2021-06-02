@@ -67,6 +67,12 @@ glm::vec3 SceneObject::lighting(glm::vec3 lightPos, glm::vec3 viewVec, glm::vec3
 				shadowRay = new Ray(shadowRay->hit, lightVec);
 				shadowRay->closestPt(objects);
 			}
+			else if (hitObj->isRefractive()) {
+				shadow += (1-shadow) * (1-hitObj->getRefractionCoeff());
+
+				shadowRay = new Ray(shadowRay->hit, lightVec);
+				shadowRay->closestPt(objects);
+			}
 			else {
 				shadow = 1;
 				break;
