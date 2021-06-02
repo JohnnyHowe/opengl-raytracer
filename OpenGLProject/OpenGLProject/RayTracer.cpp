@@ -152,6 +152,11 @@ void initialize()
 	floor->shader = &groundShader;
 	floor->useCustomShader = true;
 
+	Sphere* sphere1 = new Sphere(glm::vec3(0.0, 5, -105.0), 15.0);
+	sphere1->setColor(glm::vec3(1.0, 1.0, 1.0));   //Set colour to blue
+	scene.objects.push_back(sphere1);
+	sphere1->setRefractivity(true, 0.95f, 1.3f);
+
 	// Roof
 	Plane* roof = new Plane(glm::vec3(-roomWidth / 2.0f, -15 + roofHeight, -40), //Point A
 							glm::vec3(roomWidth / 2.0f, -15 + roofHeight, -40), //Point B
@@ -196,12 +201,6 @@ void initialize()
 
 	createBox(glm::vec3(0, -12.5, -115.0), glm::vec3(20, 5, 40), glm::vec3(1.0, 0.5, 0.5));
 
-	Sphere* sphere1 = new Sphere(glm::vec3(0.0, 5, -105.0), 15.0);
-	sphere1->setColor(glm::vec3(1.0, 1.0, 1.0));   //Set colour to blue
-	scene.objects.push_back(sphere1);
-	sphere1->setRefractivity(true, 0.9f, 1.3f);
-	//sphere1->setTransparency(true, 0.8f);
-
 	float tr = 0.8f;
 	Sphere* sphere3 = new Sphere(glm::vec3(10.0, -10.0, -82.0), 5.0);
 	sphere3->setColor(glm::vec3(0, 1, 0));
@@ -237,7 +236,7 @@ int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(1000, 1000);
+	glutInitWindowSize(900, 900);
 	glutInitWindowPosition(20, 20);
 	glutCreateWindow("joh29 Raytracer");
 
