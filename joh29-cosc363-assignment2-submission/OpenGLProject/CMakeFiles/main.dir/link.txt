@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/main.dir/OpenGLProject/RayTracer.cpp.o  -o main  -lGL -lGLU -lglut -lXi 
